@@ -32,10 +32,10 @@ urllib3.disable_warnings()
 
 __module_name__ = "Link Title Plus"
 __module_author__ = "Anoneemo"
-__module_version__ = "0.6"
+__module_version__ = "0.6.1"
 __module_description__ = "Display website title when a link is posted in chat or, up to your choice, publicly announce it in channel"
 
-# IMPORTANT: Scroll to line 62 to choose the channels the script will be allowed to announce the title on (optional)
+# IMPORTANT: Scroll to line 85 to choose the channels the script will be allowed to announce the title on (optional)
 # This is a fork of PDog's link-title.py script
 #
 # TODO: Merge py2/py3 branches <PDog>
@@ -62,7 +62,7 @@ def snarfer(html_doc):
         snarf = ""
     return snarf
 
-def print_title(url, chan, nick, mode):
+def print_title(url, chan, nick, mode, cont):
     try:
         r = requests.get(url, verify=False)
         if r.headers["content-type"].split("/")[0] == "text":
@@ -70,7 +70,9 @@ def print_title(url, chan, nick, mode):
             r.close()
             title = snarfer(html_doc)
             title = HTMLParser().unescape(title)
-            chanmodes = hexchat.find_context(channel=chan).get_info("modes")
+            title = title.lstrip()
+            cur_context = cont
+            chanmodes = cur_context.get_info("modes")
             
             # WARNING: If you are on the same channel on two (or more) different networks,
             # the script could not work or have unexpected behaviour. 
@@ -90,26 +92,25 @@ def print_title(url, chan, nick, mode):
                 if "c" in chanmodes:
                     msg = u":: {0} " + \
                           u":: URL: {1} " + \
-                          u"::"
-                    msg = msg.format(title, url, nick, mode)      
+                          u"::"     
                 # If channel has colors enabled
                 else:
                     msg = u"\002::\002\0034 {0} \003" + \
 	                  u"\002:: URL:\002 \00318\037{1}\017 " + \
-                          u"\002::\002"              
-                    msg = msg.format(title, url, nick, mode)
+                          u"\002::\002"
+                msg = msg.format(title, url, nick, mode)
                 # Weird context and timing issues with threading, hence:
-                hexchat.command("TIMER 0.1 DOAT {0} MSG {0} {1}".format(chan, msg))
+                cur_context.command("TIMER 0.1 DOAT {0} MSG {0} {1}".format(chan, msg))
             else:
                 # PRINT LOCALLY
                 msg = u"\n" + \
                        u"\0033\002::\003 TITLE:\002 \0034{0} \003\n" + \
                        u"\0033\002::\003 URL:\002 \00318\037{1}\017 \n" + \
-                       u"\0033\002::\003 POSTED BY:\002 {3}{2} \n" + \
+                       u"\0033\002::\003 POSTED BY:\002 {3}{2} \017\n" + \
                        u"\n"
                 msg = msg.format(title, url, nick, mode)
                 # Weird context and timing issues with threading, hence:
-                hexchat.command("TIMER 0.1 DOAT {0} ECHO {1}".format(chan, msg))
+                cur_context.command("TIMER 0.1 DOAT {0} ECHO {1}".format(chan, msg))
     except requests.exceptions.RequestException as e:
         print(e)
 
@@ -119,7 +120,9 @@ def event_cb(word, word_eol, userdata, attr):
         return
     
     word = [(word[i] if len(word) > i else "") for i in range(4)]
-    chan = hexchat.get_info("channel")
+    cur_context = hexchat.get_context()
+    chan = cur_context.get_info("channel")
+    
     
     for w in word[1].split():
         stripped_word = hexchat.strip(w, -1, 3)
@@ -130,7 +133,7 @@ def event_cb(word, word_eol, userdata, attr):
             if url.endswith(","):
                 url = url[:-1]
                 
-            threading.Thread(target=print_title, args=(url, chan, word[0], word[2])).start()
+            threading.Thread(target=print_title, args=(url, chan, word[0], word[2], cur_context)).start()
 
     return hexchat.EAT_NONE
             
