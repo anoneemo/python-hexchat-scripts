@@ -35,7 +35,7 @@ __module_author__ = "Anoneemo"
 __module_version__ = "0.6.1"
 __module_description__ = "Display website title when a link is posted in chat. If it's a YouTube link, video title will be announced on selected channels."
 
-# IMPORTANT: Scroll to line 85 to choose the channels the script will be allowed to announce the title on (optional)
+# IMPORTANT: Scroll to line 81 to choose the channels the script will be allowed to announce the title on (optional)
 # This is a fork of PDog's link-title.py script
 #
 # TODO: Merge py2/py3 branches <PDog>
@@ -74,14 +74,10 @@ def print_title(url, chan, nick, mode, cont):
             cur_context = cont
             chanmodes = cur_context.get_info("modes")
             
-            # WARNING: If you are on the same channel on two (or more) different networks,
-            # the script could not work or have unexpected behaviour. 
-            # The above case is not being handled. Beware.
-            #
             # Select the channels on which the script will publicly print the title
             # by replacing firstchannel, secondchannel, third channel etc.
             # you can also delete them or add them but you have to maintain the same syntax
-            # do not delete the apix ( ' ' )
+            # do not delete quotes ( ' ' )
             if ((chan == '#firstchannel' or chan == '#secondchannel' or chan == '#thirdchannel') and
 	        (url.startswith('http://www.youtube.com') 
 	        or url.startswith('http://youtube.com') 
