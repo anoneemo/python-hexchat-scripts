@@ -32,7 +32,7 @@ urllib3.disable_warnings()
 
 __module_name__ = "YouTube Video Title"
 __module_author__ = "Anoneemo"
-__module_version__ = "0.6.1"
+__module_version__ = "0.6.2"
 __module_description__ = "Display website title when a link is posted in chat. If it's a YouTube link, video title will be announced on selected channels."
 
 # IMPORTANT: Scroll to line 81 to choose the channels the script will be allowed to announce the title on (optional)
