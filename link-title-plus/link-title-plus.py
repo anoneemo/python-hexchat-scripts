@@ -93,7 +93,7 @@ def print_title(url, chan, nick, mode, cont):
                 # If channel has colors enabled
                 else:
                     msg = u"\002::\002\0034 {0} \003" + \
-	                  u"\002:: URL:\002 \00318\037{1}\017 " + \
+	                  u"\002:: URL:\002\00318\037 {1} \017 " + \
                           u"\002::\002"
                 msg = msg.format(title, url, nick, mode)
                 # Weird context and timing issues with threading, hence:
@@ -101,8 +101,8 @@ def print_title(url, chan, nick, mode, cont):
             else:
                 # PRINT LOCALLY
                 msg = u"\n" + \
-                       u"\0033\002::\003 TITLE:\002 \0034{0} \003\n" + \
-                       u"\0033\002::\003 URL:\002 \00318\037{1}\017 \n" + \
+                       u"\0033\002::\003 TITLE:\002\0034 {0} \003\n" + \
+                       u"\0033\002::\003 URL:\002\00318\037 {1} \017\n" + \
                        u"\0033\002::\003 POSTED BY:\002 {3}{2} \017\n" + \
                        u"\n"
                 msg = msg.format(title, url, nick, mode)
