@@ -26,13 +26,11 @@ import re
 import requests
 import threading
 import hexchat
-import urllib3
 requests.packages.urllib3.disable_warnings()
-urllib3.disable_warnings()
 
 __module_name__ = "Link Title Plus"
 __module_author__ = "Anoneemo"
-__module_version__ = "0.6.4"
+__module_version__ = "0.6.5"
 __module_description__ = "Display website title when a link is posted in chat or, up to your choice, publicly announce it in channel"
 
 # IMPORTANT: Scroll to line 81 to choose the channels the script will be allowed to announce the title on (optional)
