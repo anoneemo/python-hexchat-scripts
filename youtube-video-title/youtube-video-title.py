@@ -26,13 +26,11 @@ import re
 import requests
 import threading
 import hexchat
-import urllib3
 requests.packages.urllib3.disable_warnings()
-urllib3.disable_warnings()
 
 __module_name__ = "YouTube Video Title"
 __module_author__ = "Anoneemo"
-__module_version__ = "0.6.2"
+__module_version__ = "0.6.6"
 __module_description__ = "Display website title when a link is posted in chat. If it's a YouTube link, video title will be announced on selected channels."
 
 # IMPORTANT: Scroll to line 81 to choose the channels the script will be allowed to announce the title on (optional)
@@ -72,8 +70,7 @@ def print_title(url, chan, nick, mode, cont):
             title = snarfer(html_doc)
             title = HTMLParser().unescape(title)
             title = title.lstrip()
-            cur_context = cont
-            chanmodes = cur_context.get_info("modes")
+            chanmodes = cont.get_info("modes")
             
             # Select the channels on which the script will publicly print the title
             # by replacing firstchannel, secondchannel, third channel etc.
@@ -99,21 +96,21 @@ def print_title(url, chan, nick, mode, cont):
                 # If channel has colors enabled
                 else:
                     msg = u"\002::\002\0034 {0} \003" + \
-	                  u"\002:: URL:\002 \00318\037{1}\017 " + \
+	                  u"\002:: URL: \002\00318\037{1}\017 " + \
                           u"\002::\002"
                 msg = msg.format(title, url, nick, mode)
                 # Weird context and timing issues with threading, hence:
-                cur_context.command("TIMER 0.1 DOAT {0} MSG {0} {1}".format(chan, msg))
+                cont.command("TIMER 0.1 DOAT {0} MSG {0} {1}".format(chan, msg))
             else:
                 # PRINT LOCALLY
                 msg = u"\n" + \
-                       u"\0033\002::\003 TITLE:\002 \0034{0} \003\n" + \
-                       u"\0033\002::\003 URL:\002 \00318\037{1}\017 \n" + \
+                       u"\0033\002::\003 TITLE:\002\0034 {0} \003\n" + \
+                       u"\0033\002::\003 URL: \002\00318\037{1}\017 \n" + \
                        u"\0033\002::\003 POSTED BY:\002 {3}{2} \017\n" + \
                        u"\n"
                 msg = msg.format(title, url, nick, mode)
                 # Weird context and timing issues with threading, hence:
-                cur_context.command("TIMER 0.1 DOAT {0} ECHO {1}".format(chan, msg))
+                cont.command("TIMER 0.1 DOAT {0} ECHO {1}".format(chan, msg))
     except requests.exceptions.RequestException as e:
         print(e)
 
