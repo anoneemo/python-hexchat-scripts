@@ -33,7 +33,7 @@ __module_author__ = "Anoneemo"
 __module_version__ = "0.6.6"
 __module_description__ = "Display website title when a link is posted in chat. If it's a YouTube link, video title will be announced on selected channels."
 
-# IMPORTANT: Scroll to line 81 to choose the channels the script will be allowed to announce the title on (optional)
+# IMPORTANT: Scroll to line 79 to choose the channels the script will be allowed to announce the title on (optional)
 # This is a fork of PDog's link-title.py script
 #
 # TODO: Merge py2/py3 branches <PDog>
