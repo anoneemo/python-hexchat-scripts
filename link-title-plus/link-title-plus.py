@@ -30,10 +30,10 @@ requests.packages.urllib3.disable_warnings()
 
 __module_name__ = "Link Title Plus"
 __module_author__ = "Anoneemo"
-__module_version__ = "0.6.5"
+__module_version__ = "0.6.6"
 __module_description__ = "Display website title when a link is posted in chat or, up to your choice, publicly announce it in channel"
 
-# IMPORTANT: Scroll to line 81 to choose the channels the script will be allowed to announce the title on (optional)
+# IMPORTANT: Scroll to line 79 to choose the channels the script will be allowed to announce the title on (optional)
 # This is a fork of PDog's link-title.py script
 #
 # TODO: Merge py2/py3 branches <PDog>
@@ -55,8 +55,8 @@ def find_yt_script():
 
 def snarfer(html_doc):
     try:
-        h1 = html_doc[html_doc.index("<title")+6:html_doc.index("</title>")][:431]
-        snarf = h1[h1.index(">")+1:][:431]
+        snarf = html_doc[html_doc.index("<title")+6:html_doc.index("</title>")][:431]
+        snarf = snarf[snarf.index(">")+1:]
     except ValueError:
         snarf = ""
     return snarf
@@ -70,8 +70,7 @@ def print_title(url, chan, nick, mode, cont):
             title = snarfer(html_doc)
             title = HTMLParser().unescape(title)
             title = title.lstrip()
-            cur_context = cont
-            chanmodes = cur_context.get_info("modes")
+            chanmodes = cont.get_info("modes")
             
             # Select the channels on which the script will publicly print the title
             # by replacing firstchannel, secondchannel, third channel etc.
@@ -95,7 +94,7 @@ def print_title(url, chan, nick, mode, cont):
                           u"\002::\002"
                 msg = msg.format(title, url, nick, mode)
                 # Weird context and timing issues with threading, hence:
-                cur_context.command("TIMER 0.1 DOAT {0} MSG {0} {1}".format(chan, msg))
+                cont.command("TIMER 0.1 DOAT {0} MSG {0} {1}".format(chan, msg))
             else:
                 # PRINT LOCALLY
                 msg = u"\n" + \
@@ -105,7 +104,7 @@ def print_title(url, chan, nick, mode, cont):
                        u"\n"
                 msg = msg.format(title, url, nick, mode)
                 # Weird context and timing issues with threading, hence:
-                cur_context.command("TIMER 0.1 DOAT {0} ECHO {1}".format(chan, msg))
+                cont.command("TIMER 0.1 DOAT {0} ECHO {1}".format(chan, msg))
     except requests.exceptions.RequestException as e:
         print(e)
 
